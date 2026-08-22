@@ -336,6 +336,31 @@ a { color: inherit; text-decoration: none; }
 .cta-final-inner { max-width: 620px; margin: 0 auto; }
 .cta-final-actions { justify-content: center; margin-top: 8px; }
 
+/* ============================== PLANOS ============================== */
+.pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 22px; align-items: stretch; }
+.pricing-card {
+  background: var(--surface); border: 1px solid var(--border-soft); border-radius: var(--radius-lg);
+  padding: 32px 26px; display: flex; flex-direction: column; transition: border-color .2s ease, transform .2s ease;
+  position: relative;
+}
+.pricing-card:hover { border-color: var(--brand-1); transform: translateY(-3px); }
+.pricing-card.featured { border-color: var(--accent); background: var(--surface-2); box-shadow: 0 20px 50px rgba(91,141,239,.18); }
+.pricing-badge {
+  position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--brand-1), var(--brand-2)); color: #fff;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .4px; padding: 6px 16px; border-radius: 20px;
+  white-space: nowrap;
+}
+.pricing-name { font-size: 15px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: .6px; }
+.pricing-price { display: flex; align-items: baseline; gap: 6px; margin: 12px 0 4px; }
+.pricing-price strong { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 38px; font-weight: 800; color: var(--text); }
+.pricing-price span { font-size: 14px; color: var(--text-dim); }
+.pricing-sub { font-size: 13.5px; color: var(--text-mute); margin-bottom: 22px; }
+.pricing-card .check-list { margin-bottom: 26px; flex: 1; }
+.pricing-card .check-list li { font-size: 14.5px; font-weight: 500; }
+.pricing-card .btn { width: 100%; }
+.pricing-note { text-align: center; font-size: 13.5px; color: var(--text-mute); margin-top: 28px; }
+
 /* ============================== FOOTER ============================== */
 .footer { background: var(--bg-1); border-top: 1px solid var(--border-soft); padding: 64px 0 0; }
 .footer-grid { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr); gap: 40px; padding-bottom: 48px; }
@@ -357,6 +382,7 @@ a { color: inherit; text-decoration: none; }
   .lead-wrap { grid-template-columns: minmax(0,1fr); }
   .painel-gallery { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .feat-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .pricing-grid { grid-template-columns: minmax(0,1fr); max-width: 420px; margin: 0 auto; }
   .footer-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); }
   .footer-brand { grid-column: 1 / -1; }
 }
