@@ -97,6 +97,72 @@
     });
   }
 
+  // formulário de "Seja parceiro" -> pré-cadastro real na API (fica pendente
+  // até o admin aprovar), diferente do form de captação de provedor acima
+  // (que só abre o WhatsApp, sem persistir nada).
+  var API_URL = "https://codex-hub-isp-api-production.up.railway.app/v1";
+  var parceiroForm = $("#parceiroForm");
+  if (parceiroForm) {
+    var parcSubmitBtn = parceiroForm.querySelector(".lead-submit");
+    parceiroForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var nome = $("#parcNome").value.trim();
+      var cidade = $("#parcCidade").value.trim();
+      var uf = $("#parcUf").value.trim();
+      var contato = $("#parcContato").value.trim();
+      var observacoes = $("#parcObs").value.trim();
+
+      var sucesso = $("#parceiroSuccess");
+      var erro = $("#parceiroErro");
+      var erroMsg = $("#parceiroErroMsg");
+      if (sucesso) sucesso.classList.remove("show");
+      if (erro) erro.classList.remove("show");
+
+      var camposObrigatorios = [
+        { el: $("#parcNome"), valor: nome },
+        { el: $("#parcCidade"), valor: cidade },
+        { el: $("#parcUf"), valor: uf },
+        { el: $("#parcContato"), valor: contato },
+      ];
+      var valido = true;
+      camposObrigatorios.forEach(function (campo) {
+        if (!campo.valor) {
+          campo.el.style.borderColor = "#E4483C";
+          valido = false;
+        } else {
+          campo.el.style.borderColor = "";
+        }
+      });
+      if (!valido) return;
+
+      if (parcSubmitBtn) { parcSubmitBtn.disabled = true; parcSubmitBtn.textContent = "Enviando…"; }
+
+      fetch(API_URL + "/parceiros/pre-cadastro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nome: nome, cidade: cidade, uf: uf, contato: contato, observacoes: observacoes }),
+      })
+        .then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (json) {
+            if (!res.ok) throw new Error((json && json.message) || "Não foi possível enviar. Tente de novo em instantes.");
+            return json;
+          });
+        })
+        .then(function () {
+          parceiroForm.reset();
+          if (sucesso) sucesso.classList.add("show");
+        })
+        .catch(function (err) {
+          if (erroMsg) erroMsg.textContent = err.message || "Não foi possível enviar. Tente de novo em instantes.";
+          if (erro) erro.classList.add("show");
+        })
+        .finally(function () {
+          if (parcSubmitBtn) { parcSubmitBtn.disabled = false; parcSubmitBtn.textContent = "Enviar pré-cadastro"; }
+        });
+    });
+  }
+
   // revela seções ao rolar (sutil, respeita reduced-motion)
   var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!prefersReduced && "IntersectionObserver" in window) {

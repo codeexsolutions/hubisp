@@ -31,6 +31,7 @@
       <a href="#painel">Painel do provedor</a>
       <a href="#telas">Telas do app</a>
       <a href="#planos">Planos</a>
+      <a href="#parcerias">Seja parceiro</a>
       <a href="#duvidas">Dúvidas</a>
       <a href="#contato">Contato</a>
     </nav>
@@ -400,6 +401,74 @@
       </div>
 
       <p class="pricing-note">Valores de referência — fale com a gente pra confirmar as condições pro tamanho da sua base.</p>
+    </div>
+  </section>
+
+  <!-- ==================== PARCERIAS (parceiro se cadastra) ==================== -->
+  <section class="section" id="parcerias">
+    <div class="wrap lead-wrap">
+      <div class="lead-copy">
+        <p class="eyebrow">Seja um parceiro Synk</p>
+        <h2 class="section-title-left">Sua oferta na tela que o cliente abre todo mês pra pagar a internet.</h2>
+        <p class="section-lead-left">
+          Milhares de assinantes já entram no app do provedor pra ver fatura e consumo — e é ali, na Central de
+          Benefícios, que eles descobrem parceiros locais como o seu. Cadastre seu negócio, publique suas ofertas
+          e comece a vender pra quem já está por perto, sem gastar um centavo de anúncio.
+        </p>
+
+        <ul class="check-list">
+          <li><svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 10.5l3.5 3.5L16 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Visibilidade direta pra uma base fiel de clientes da sua região</li>
+          <li><svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 10.5l3.5 3.5L16 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Sem mensalidade — você só paga uma pequena comissão quando a venda acontece de verdade</li>
+          <li><svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 10.5l3.5 3.5L16 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Portal próprio pra criar ofertas, validar cupons e acompanhar o financeiro</li>
+          <li><svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 10.5l3.5 3.5L16 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Você decide quando ativar, pausar ou encerrar cada oferta</li>
+        </ul>
+
+        <p style="font-size:13px;color:var(--text-mute);margin-top:26px;">
+          Seu pré-cadastro passa por uma análise rápida do nosso time antes de liberar o acesso ao portal.
+        </p>
+      </div>
+
+      <form class="lead-form" id="parceiroForm" novalidate>
+        <h3>Quero ser parceiro</h3>
+        <p class="lead-form-sub">Preencha seus dados — respondemos em até 1 dia útil.</p>
+
+        <div class="field">
+          <label for="parcNome">Nome do negócio</label>
+          <input id="parcNome" name="nome" type="text" placeholder="ex.: Academia Corpo em Forma" required />
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="parcCidade">Cidade</label>
+            <input id="parcCidade" name="cidade" type="text" placeholder="ex.: Fortaleza" required />
+          </div>
+          <div class="field">
+            <label for="parcUf">UF</label>
+            <input id="parcUf" name="uf" type="text" maxlength="2" placeholder="ex.: CE" required style="text-transform:uppercase;" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="parcContato">WhatsApp</label>
+          <input id="parcContato" name="contato" type="tel" placeholder="(00) 00000-0000" required />
+        </div>
+
+        <div class="field">
+          <label for="parcObs">Conte sobre seu negócio e a oferta que você quer disponibilizar</label>
+          <textarea id="parcObs" name="observacoes" rows="3" placeholder="ex.: Cinema com 4 salas, queremos oferecer 20% de desconto no ingresso pra assinantes"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg lead-submit">Enviar pré-cadastro</button>
+        <p class="lead-note">Depois de aprovado, você recebe o acesso ao portal do parceiro pra publicar suas ofertas.</p>
+        <div class="lead-success" id="parceiroSuccess">
+          <svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 10.5l3.5 3.5L16 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Pré-cadastro enviado! Nosso time vai analisar e entrar em contato.
+        </div>
+        <div class="lead-success" id="parceiroErro" style="background:rgba(228,72,60,.12);border-color:rgba(228,72,60,.4);color:#E4483C;">
+          <svg viewBox="0 0 20 20" width="16" height="16"><path d="M10 6v5M10 14h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="10" cy="10" r="8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span id="parceiroErroMsg">Não foi possível enviar. Tente de novo em instantes.</span>
+        </div>
+      </form>
     </div>
   </section>
 
