@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "privacidade.synkisp.com.br" }],
+      "destination": "/privacidade.html",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/:path*",
