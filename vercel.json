@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "privacidade.synk.com.br" }],
+      "destination": "/privacidade.html"
+    }
+  ]
+}
