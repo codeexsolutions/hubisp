@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "privacidade.synk.com.br" }],
+      "has": [{ "type": "host", "value": "privacidade.synkisp.com.br" }],
       "destination": "/privacidade.html"
     }
   ]
