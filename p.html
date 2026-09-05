@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Internet fibra e móvel</title>
+<link rel="icon" type="image/svg" href="favicon/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --accent: #2563EB;
+    --accent2: #7C3AED;
+    --bg: #05070B;
+    --surface: #0E1420;
+    --border: #1C2431;
+    --text: #F5F7FA;
+    --text-mute: #9AA4B2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
+
+  #estado-carregando, #estado-indisponivel {
+    min-height: 100dvh; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 14px; text-align: center; padding: 32px;
+  }
+  #estado-indisponivel { display: none; }
+  .spinner {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 3px solid rgba(255,255,255,.15); border-top-color: var(--accent);
+    animation: girar 0.8s linear infinite;
+  }
+  @keyframes girar { to { transform: rotate(360deg); } }
+
+  #pagina { display: none; }
+
+  header.nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px; border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand img { width: 36px; height: 36px; border-radius: 10px; object-fit: contain; background: #fff1; }
+  .brand span { font-weight: 800; font-size: 18px; }
+
+  .hero {
+    position: relative; overflow: hidden;
+    padding: 64px 24px 56px;
+    text-align: center;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent) 20%, transparent) 0%, transparent 60%);
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .eyebrow {
+    display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px;
+    color: var(--accent); text-transform: uppercase; margin-bottom: 14px;
+  }
+  .hero h1 { font-size: clamp(28px, 5vw, 46px); line-height: 1.15; font-weight: 800; }
+  .hero p.lead { color: var(--text-mute); font-size: 16px; max-width: 560px; margin: 18px auto 0; line-height: 1.6; }
+  .cta-row { margin-top: 30px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 26px; border-radius: 999px; font-weight: 700; font-size: 15px;
+    text-decoration: none; border: none; cursor: pointer;
+  }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+  .btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+
+  section { padding: 48px 24px; }
+  .section-title { text-align: center; font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  .section-sub { text-align: center; color: var(--text-mute); font-size: 14px; margin-bottom: 34px; }
+
+  .grid-planos { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+  .card-plano {
+    background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px;
+    padding: 26px 22px; text-align: center; position: relative;
+  }
+  .card-plano.destaque { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .badge-destaque {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--accent); color: #fff; font-size: 11px; font-weight: 700;
+    padding: 4px 14px; border-radius: 999px; white-space: nowrap;
+  }
+  .plano-velocidade { font-size: 34px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .plano-velocidade small { font-size: 16px; font-weight: 700; }
+  .plano-nome { color: var(--text-mute); font-size: 13px; margin-top: 6px; }
+  .plano-preco { font-size: 24px; font-weight: 800; margin-top: 18px; }
+  .plano-preco span { font-size: 12px; font-weight: 600; color: var(--text-mute); }
+  .plano-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px; }
+  .tag {
+    font-size: 10.5px; font-weight: 700; color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 999px; padding: 3px 10px;
+  }
+
+  .section-movel { background: var(--surface); }
+  .combo-tag {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700;
+    color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border-radius: 999px; padding: 3px 10px; margin-top: 10px;
+  }
+
+  footer {
+    text-align: center; padding: 30px 24px; color: var(--text-mute); font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div id="estado-carregando">
+  <div class="spinner"></div>
+</div>
+
+<div id="estado-indisponivel">
+  <h2>Página não disponível</h2>
+  <p style="color:var(--text-mute);max-width:360px;">Não encontramos essa página. Confira o link com o seu provedor.</p>
+</div>
+
+<div id="pagina">
+  <header class="nav">
+    <div class="brand">
+      <img id="marca-logo" src="" alt="" />
+      <span id="marca-nome"></span>
+    </div>
+    <a id="whatsapp-topo" class="btn btn-primary" style="padding:9px 18px;font-size:13px;" href="#" target="_blank" rel="noopener">Falar agora</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <p class="eyebrow" id="hero-cidade"></p>
+    <h1 id="hero-headline"></h1>
+    <p class="lead" id="hero-subheadline"></p>
+    <div class="cta-row">
+      <a id="whatsapp-hero" class="btn btn-primary" href="#" target="_blank" rel="noopener">Quero contratar</a>
+      <a href="#planos" class="btn btn-outline">Ver planos</a>
+    </div>
+  </section>
+
+  <section id="planos">
+    <h2 class="section-title">Planos de internet</h2>
+    <p class="section-sub">Fibra de verdade, sem letra miúda.</p>
+    <div class="grid-planos" id="grid-planos-internet"></div>
+  </section>
+
+  <section class="section-movel" id="secao-movel" style="display:none;">
+    <h2 class="section-title">Internet móvel</h2>
+    <p class="section-sub">Planos de dados avulsos ou combo com a sua fibra.</p>
+    <div class="grid-planos" id="grid-planos-movel"></div>
+  </section>
+
+  <footer>
+    <p id="footer-cta"></p>
+    <p style="margin-top:10px;">Página criada com <a href="https://synkisp.com.br" target="_blank" rel="noopener">Synk ISP</a></p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var API_BASE = "https://codex-hub-isp-api-production.up.railway.app/v1";
+
+  function obterCodigoProvedor() {
+    var partes = window.location.pathname.split("/").filter(Boolean);
+    var idx = partes.indexOf("p");
+    if (idx !== -1 && partes[idx + 1]) return partes[idx + 1];
+    var params = new URLSearchParams(window.location.search);
+    return params.get("codigo") || "";
+  }
+
+  function brl(v) {
+    return "R$ " + Number(v).toFixed(2).replace(".", ",");
+  }
+
+  function linkWhatsapp(whatsapp, texto) {
+    if (!whatsapp) return null;
+    var numero = String(whatsapp).replace(/\D/g, "");
+    return "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
+  }
+
+  function montarCardInternet(p) {
+    var tags = (p.beneficios || "").split(",").map(function (t) { return t.trim(); }).filter(Boolean);
+    var destaque = p.destaque === true || p.destaque === "true";
+    return (
+      '<div class="card-plano' + (destaque ? " destaque" : "") + '">' +
+        (destaque ? '<span class="badge-destaque">Mais popular</span>' : "") +
+        '<div class="plano-velocidade">' + p.velocidade_mega + '<small> MEGA</small></div>' +
+        '<div class="plano-nome">' + p.nome + '</div>' +
+        '<div class="plano-preco">' + brl(p.valor) + '<span>/mês</span></div>' +
+        (tags.length ? '<div class="plano-tags">' + tags.map(function (t) { return '<span class="tag">' + t.toUpperCase() + '</span>'; }).join("") + '</div>' : "") +
+      '</div>'
+    );
+  }
+
+  function montarCardMovel(p) {
+    var totalGb = Number(p.gb_plano) + Number(p.gb_bonus || 0);
+    var isCombo = p.tipo === "combo" && p.mega_fibra;
+    var tags = (p.beneficios || "").split(",").map(function (t) { return t.trim(); }).filter(Boolean);
+    return (
+      '<div class="card-plano">' +
+        '<div class="plano-velocidade">' + totalGb + '<small> GB</small></div>' +
+        '<div class="plano-nome">' + p.nome + '</div>' +
+        (isCombo ? '<div class="combo-tag">+ Internet fibra ' + p.mega_fibra + ' MEGA</div>' : "") +
+        '<div class="plano-preco">' + brl(p.valor) + '<span>/mês</span></div>' +
+        (tags.length ? '<div class="plano-tags">' + tags.map(function (t) { return '<span class="tag">' + t.toUpperCase() + '</span>'; }).join("") + '</div>' : "") +
+      '</div>'
+    );
+  }
+
+  var codigo = obterCodigoProvedor();
+  if (!codigo) {
+    document.getElementById("estado-carregando").style.display = "none";
+    document.getElementById("estado-indisponivel").style.display = "flex";
+    return;
+  }
+
+  fetch(API_BASE + "/provedores/lp/" + encodeURIComponent(codigo))
+    .then(function (res) {
+      if (!res.ok) throw new Error("indisponível");
+      return res.json();
+    })
+    .then(function (json) {
+      var lp = json.data;
+      var tema = lp.tema || {};
+      var whatsapp = lp.atendimento && lp.atendimento.whatsapp;
+
+      document.documentElement.style.setProperty("--accent", tema.accent || "#2563EB");
+      document.documentElement.style.setProperty("--accent2", tema.accent2 || "#7C3AED");
+      document.title = tema.nome ? tema.nome + " — Internet fibra e móvel" : "Internet fibra e móvel";
+
+      document.getElementById("marca-nome").textContent = tema.nome || "";
+      if (tema.logo_url) document.getElementById("marca-logo").src = tema.logo_url;
+
+      document.getElementById("hero-cidade").textContent = lp.cidade || "";
+      document.getElementById("hero-headline").textContent = lp.headline;
+      document.getElementById("hero-subheadline").textContent = lp.subheadline;
+      document.getElementById("footer-cta").textContent = (tema.nome || "Seu provedor") + " · fale com a gente antes de contratar.";
+
+      var textoWhats = "Olá! Vi a página da " + (tema.nome || "internet") + " e quero contratar um plano.";
+      var wa = linkWhatsapp(whatsapp, textoWhats);
+      ["whatsapp-topo", "whatsapp-hero"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (wa) { el.href = wa; } else { el.style.display = "none"; }
+      });
+
+      var planosInternet = lp.planosInternet || [];
+      document.getElementById("grid-planos-internet").innerHTML = planosInternet.length
+        ? planosInternet.map(montarCardInternet).join("")
+        : '<p style="text-align:center;color:var(--text-mute);grid-column:1/-1;">Planos em breve — fale com a gente.</p>';
+
+      var planosMovel = lp.planosMoveis || [];
+      if (planosMovel.length) {
+        document.getElementById("secao-movel").style.display = "block";
+        document.getElementById("grid-planos-movel").innerHTML = planosMovel.map(montarCardMovel).join("");
+      }
+
+      document.getElementById("estado-carregando").style.display = "none";
+      document.getElementById("pagina").style.display = "block";
+    })
+    .catch(function () {
+      document.getElementById("estado-carregando").style.display = "none";
+      document.getElementById("estado-indisponivel").style.display = "flex";
+    });
+})();
+</script>
+</body>
+</html>

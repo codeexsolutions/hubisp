@@ -12,6 +12,10 @@
       "source": "/:path*",
       "has": [{ "type": "host", "value": "privacidade.synkisp.com.br" }],
       "destination": "/privacidade.html"
+    },
+    {
+      "source": "/p/:codigo",
+      "destination": "/p.html"
     }
   ]
 }
