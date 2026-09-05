@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Internet fibra e móvel</title>
-<link rel="icon" type="image/svg" href="favicon/favicon.png">
+<link rel="icon" id="favicon-link" type="image/png" href="favicon/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -238,6 +238,10 @@
       document.documentElement.style.setProperty("--accent", tema.accent || "#2563EB");
       document.documentElement.style.setProperty("--accent2", tema.accent2 || "#7C3AED");
       document.title = tema.nome ? tema.nome + " — Internet fibra e móvel" : "Internet fibra e móvel";
+
+      // Favicon do provedor, se ele tiver um cadastrado — senão mantém o padrão da Synk.
+      var faviconProvedor = tema.favicon || tema.icon192 || tema.icon512 || tema.logo_url;
+      if (faviconProvedor) document.getElementById("favicon-link").href = faviconProvedor;
 
       document.getElementById("marca-nome").textContent = tema.nome || "";
       if (tema.logo_url) document.getElementById("marca-logo").src = tema.logo_url;
