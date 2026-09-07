@@ -109,7 +109,7 @@
     beneficios: "Central de Benefícios",
     recompensas: "Pontos e recompensas",
     desbloqueio_confianca: "Desbloqueio de confiança",
-    iptv: "IPTV ao vivo no app do assinante",
+    //iptv: "IPTV ao vivo no app do assinante",
     app_tv: "App Synk TV (Android TV e celular)",
     planos_moveis: "Internet Móvel (planos de dados)",
     landpage: "Vitrine de Planos — sua página pública",
