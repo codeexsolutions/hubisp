@@ -101,6 +101,56 @@
   // até o admin aprovar), diferente do form de captação de provedor acima
   // (que só abre o WhatsApp, sem persistir nada).
   var API_URL = "https://codex-hub-isp-api-production.up.railway.app/v1";
+
+  // Seção de planos: busca os mesmos planos/módulos cadastrados no admin
+  // (painel > Planos) em vez de manter uma lista fixa duplicada aqui — muda
+  // lá, muda na hora aqui também, sem precisar mexer no código da LP.
+  var MODULO_LABEL = {
+    beneficios: "Central de Benefícios",
+    recompensas: "Pontos e recompensas",
+    desbloqueio_confianca: "Desbloqueio de confiança",
+    iptv: "IPTV ao vivo no app do assinante",
+    app_tv: "App Synk TV (Android TV e celular)",
+    planos_moveis: "Internet Móvel (planos de dados)",
+    landpage: "Vitrine de Planos — sua página pública",
+    ia_suporte: "Sugestão de IA antes de abrir chamado",
+  };
+  var iconeCheck = '<svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 10.5l3.5 3.5L16 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> ';
+
+  function montarCardPlano(plano, destaque) {
+    var preco = Number(plano.valor_mensalidade).toFixed(2).replace(".", ",");
+    var itens = ['<li>' + iconeCheck + 'App white label com faturas e suporte</li>'];
+    (plano.modulos || []).forEach(function (m) {
+      if (MODULO_LABEL[m]) itens.push('<li>' + iconeCheck + MODULO_LABEL[m] + '</li>');
+    });
+    var mensagem = encodeURIComponent("Olá, quero começar no plano " + plano.nome + " do Synk");
+    return (
+      '<article class="pricing-card' + (destaque ? ' featured' : '') + '">' +
+        (destaque ? '<span class="pricing-badge">Mais escolhido</span>' : '') +
+        '<p class="pricing-name">' + plano.nome + '</p>' +
+        '<div class="pricing-price"><strong>R$ ' + preco + '</strong><span>/mês</span></div>' +
+        '<ul class="check-list">' + itens.join("") + '</ul>' +
+        '<a class="btn ' + (destaque ? "btn-primary" : "btn-outline") + '" href="https://wa.me/' + WHATSAPP_NUMERO + '?text=' + mensagem + '" target="_blank" rel="noopener">Começar no ' + plano.nome + '</a>' +
+      '</article>'
+    );
+  }
+
+  var pricingGrid = $("#pricingGrid");
+  if (pricingGrid) {
+    fetch(API_URL + "/painel/planos")
+      .then(function (res) { return res.json(); })
+      .then(function (json) {
+        var planos = (json && json.data) || [];
+        if (!planos.length) { pricingGrid.innerHTML = ""; return; }
+        // "Mais escolhido" = plano do meio da lista (o intermediário costuma
+        // ser o de melhor custo-benefício na régua), sem depender de flag no banco.
+        var indiceDestaque = Math.min(1, planos.length - 1);
+        pricingGrid.innerHTML = planos.map(function (p, i) { return montarCardPlano(p, i === indiceDestaque); }).join("");
+      })
+      .catch(function () {
+        pricingGrid.innerHTML = '<p style="text-align:center;color:var(--text-mute);grid-column:1/-1;">Não foi possível carregar os planos agora — fale com a gente pelo WhatsApp.</p>';
+      });
+  }
   var parceiroForm = $("#parceiroForm");
   if (parceiroForm) {
     var parcSubmitBtn = parceiroForm.querySelector(".lead-submit");
