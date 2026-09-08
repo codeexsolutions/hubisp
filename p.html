@@ -144,6 +144,12 @@
   .card-vantagem h3 { font-size: 15.5px; font-weight: 700; margin-bottom: 6px; }
   .card-vantagem p { font-size: 13.5px; color: var(--text-mute); line-height: 1.55; margin: 0; }
 
+  .grid-apps { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .app-chip {
+    font-size: 13.5px; font-weight: 700; padding: 10px 20px; border-radius: 999px;
+    background: var(--bg); border: 1.5px solid var(--border);
+  }
+
   footer {
     text-align: center; padding: 34px 24px 90px; color: var(--text-mute); font-size: 12px;
     border-top: 1px solid var(--border);
@@ -217,31 +223,17 @@
     <div class="grid-planos" id="grid-planos-movel"></div>
   </section>
 
-  <section id="vantagens">
-    <h2 class="section-title">Por que assinar</h2>
+  <section id="vantagens" style="display:none;">
+    <h2 class="section-title" id="vantagens-titulo">Por que assinar</h2>
     <p class="section-sub">O que você ganha assim que a internet é instalada.</p>
-    <div class="grid-vantagens">
-      <div class="card-vantagem">
-        <div class="vantagem-icone"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
-        <h3>Fatura e PIX no app</h3>
-        <p>Pague sua mensalidade em poucos toques, sem esperar boleto chegar.</p>
-      </div>
-      <div class="card-vantagem">
-        <div class="vantagem-icone"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 5h16v11H8l-4 4V5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
-        <h3>Suporte direto no app</h3>
-        <p>Abre e acompanha o chamado sem precisar ligar nem esperar na linha.</p>
-      </div>
-      <div class="card-vantagem">
-        <div class="vantagem-icone"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 8v4l3 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
-        <h3>Teste de velocidade</h3>
-        <p>Confirme sua conexão na hora, direto pelo celular, sem site externo.</p>
-      </div>
-      <div class="card-vantagem">
-        <div class="vantagem-icone"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
-        <h3>Tudo na palma da mão</h3>
-        <p>Contrato, consumo e histórico de pagamento, sempre à mão no app.</p>
-      </div>
-    </div>
+    <div class="grid-vantagens" id="grid-vantagens"></div>
+  </section>
+
+  <section class="section-movel" id="secao-apps" style="display:none;">
+    <p class="eyebrow" style="display:block;text-align:center;">Inclua no seu plano</p>
+    <h2 class="section-title" id="apps-titulo">Apps inclusos</h2>
+    <p class="section-sub">Já vem junto com a sua mensalidade.</p>
+    <div class="grid-apps" id="grid-apps"></div>
   </section>
 
   <footer>
@@ -276,6 +268,30 @@
     if (!whatsapp) return null;
     var numero = String(whatsapp).replace(/\D/g, "");
     return "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
+  }
+
+  // Ícones das vantagens — chave cadastrada no painel, resolvida pra um SVG
+  // embutido aqui (nada de imagem/logo externa).
+  var ICONES_VANTAGEM = {
+    zap: '<path d="M13 3 4 14h6l-1 7 9-11h-6l1-7Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+    wifi: '<path d="M2 8.5a15.9 15.9 0 0 1 20 0M5.5 12a10.6 10.6 0 0 1 13 0M9 15.5a5.3 5.3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/>',
+    shield: '<path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+    headset: '<path d="M4 5h16v11H8l-4 4V5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+    clock: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 8v4l3 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+    gift: '<rect x="4" y="9" width="16" height="11" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M4 13h16M12 9v11M8.5 9a2 2 0 1 1 0-4c1.7 0 3.5 2 3.5 4M15.5 9a2 2 0 1 0 0-4c-1.7 0-3.5 2-3.5 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+    star: '<path d="M12 3l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6L12 3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+    heart: '<path d="M12 20s-7.5-4.5-9.5-9C1 7.5 3 4 6.5 4c2 0 3.6 1.4 4.5 2.8C11.9 5.4 13.5 4 15.5 4 19 4 21 7.5 20.5 11c-2 4.5-8.5 9-8.5 9Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>',
+  };
+
+  function montarCardVantagem(v) {
+    var svgInner = ICONES_VANTAGEM[v.icone] || ICONES_VANTAGEM.zap;
+    return (
+      '<div class="card-vantagem">' +
+        '<div class="vantagem-icone"><svg viewBox="0 0 24 24" width="22" height="22">' + svgInner + '</svg></div>' +
+        '<h3>' + v.titulo + '</h3>' +
+        '<p>' + v.descricao + '</p>' +
+      '</div>'
+    );
   }
 
   function montarCardInternet(p, whatsapp, nomeProvedor) {
@@ -391,6 +407,20 @@
       if (planosMovel.length) {
         document.getElementById("secao-movel").style.display = "block";
         document.getElementById("grid-planos-movel").innerHTML = planosMovel.map(function (p) { return montarCardMovel(p, whatsapp, nomeProvedor); }).join("");
+      }
+
+      var vantagens = lp.vantagens || [];
+      if (vantagens.length) {
+        document.getElementById("vantagens").style.display = "block";
+        document.getElementById("grid-vantagens").innerHTML = vantagens.map(montarCardVantagem).join("");
+      }
+
+      var apps = lp.apps || [];
+      if (apps.length) {
+        document.getElementById("secao-apps").style.display = "block";
+        document.getElementById("grid-apps").innerHTML = apps.map(function (a) {
+          return '<span class="app-chip">' + a.nome + '</span>';
+        }).join("");
       }
 
       document.getElementById("estado-carregando").style.display = "none";
