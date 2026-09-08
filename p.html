@@ -7,13 +7,14 @@
 <link rel="icon" id="favicon-link" type="image/png" href="favicon/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   :root {
     --accent: #2563EB;
     --accent2: #7C3AED;
     --bg: #05070B;
     --surface: #0E1420;
+    --surface-2: #131B29;
     --border: #1C2431;
     --text: #F5F7FA;
     --text-mute: #9AA4B2;
@@ -25,9 +26,11 @@
     color: var(--text);
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
+    padding-bottom: 0;
   }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
   h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
+  svg { display: block; }
 
   #estado-carregando, #estado-indisponivel {
     min-height: 100dvh; display: flex; align-items: center; justify-content: center;
@@ -44,30 +47,36 @@
   #pagina { display: none; }
 
   header.nav {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 24px; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 16px 24px; border-bottom: 1px solid var(--border);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
   }
-  .brand { display: flex; align-items: center; gap: 10px; }
-  .brand img { width: 36px; height: 36px; border-radius: 10px; object-fit: contain; background: #fff1; }
-  .brand span { font-weight: 800; font-size: 18px; }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .brand img { width: 36px; height: 36px; border-radius: 10px; object-fit: contain; background: #fff1; flex-shrink: 0; }
+  .brand span { font-weight: 800; font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-actions { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+  .nav-tel { display: flex; align-items: center; gap: 6px; color: var(--text); text-decoration: none; font-weight: 700; font-size: 14px; }
+  .nav-tel svg { color: var(--accent); }
 
   .hero {
     position: relative; overflow: hidden;
-    padding: 64px 24px 56px;
+    padding: 60px 24px 48px;
     text-align: center;
   }
   .hero-bg {
     position: absolute; inset: 0; z-index: 0;
-    background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent) 20%, transparent) 0%, transparent 60%);
+    background: radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent) 22%, transparent) 0%, transparent 60%);
   }
   .hero > * { position: relative; z-index: 1; }
   .eyebrow {
     display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 1px;
     color: var(--accent); text-transform: uppercase; margin-bottom: 14px;
   }
-  .hero h1 { font-size: clamp(28px, 5vw, 46px); line-height: 1.15; font-weight: 800; }
-  .hero p.lead { color: var(--text-mute); font-size: 16px; max-width: 560px; margin: 18px auto 0; line-height: 1.6; }
-  .cta-row { margin-top: 30px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .hero h1 { font-size: clamp(28px, 5vw, 44px); line-height: 1.14; font-weight: 800; }
+  .hero p.lead { color: var(--text-mute); font-size: 16px; max-width: 540px; margin: 16px auto 0; line-height: 1.6; }
+  .cta-row { margin-top: 28px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 14px 26px; border-radius: 999px; font-weight: 700; font-size: 15px;
@@ -76,16 +85,25 @@
   .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
   .btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
 
-  section { padding: 48px 24px; }
-  .section-title { text-align: center; font-size: 26px; font-weight: 800; margin-bottom: 8px; }
-  .section-sub { text-align: center; color: var(--text-mute); font-size: 14px; margin-bottom: 34px; }
+  .trust-strip {
+    margin-top: 26px; display: inline-flex; align-items: center; gap: 10px;
+    padding: 10px 18px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border);
+    font-size: 13.5px; font-weight: 600;
+  }
+  .trust-stars { display: flex; gap: 2px; color: #F5A623; }
+  .trust-strip a { color: var(--text-mute); text-decoration: underline; font-weight: 600; }
+
+  section { padding: 44px 24px; }
+  .section-title { text-align: center; font-size: 25px; font-weight: 800; margin-bottom: 8px; }
+  .section-sub { text-align: center; color: var(--text-mute); font-size: 14px; margin-bottom: 32px; }
 
   .grid-planos { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
   .card-plano {
     background: var(--surface); border: 1.5px solid var(--border); border-radius: 20px;
-    padding: 26px 22px; text-align: center; position: relative;
+    padding: 26px 22px 24px; text-align: center; position: relative;
+    display: flex; flex-direction: column;
   }
-  .card-plano.destaque { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .card-plano.destaque { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 20px 40px -20px color-mix(in srgb, var(--accent) 60%, transparent); }
   .badge-destaque {
     position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
     background: var(--accent); color: #fff; font-size: 11px; font-weight: 700;
@@ -94,7 +112,7 @@
   .plano-velocidade { font-size: 34px; font-weight: 800; color: var(--accent); line-height: 1; }
   .plano-velocidade small { font-size: 16px; font-weight: 700; }
   .plano-nome { color: var(--text-mute); font-size: 13px; margin-top: 6px; }
-  .plano-preco { font-size: 24px; font-weight: 800; margin-top: 18px; }
+  .plano-preco { font-size: 24px; font-weight: 800; margin-top: 16px; }
   .plano-preco span { font-size: 12px; font-weight: 600; color: var(--text-mute); }
   .plano-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 14px; }
   .tag {
@@ -103,6 +121,12 @@
     border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
     border-radius: 999px; padding: 3px 10px;
   }
+  .plano-cta {
+    margin-top: 20px; padding: 11px 0; border-radius: 12px; text-decoration: none;
+    font-weight: 700; font-size: 13.5px; text-align: center;
+  }
+  .plano-cta.primaria { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+  .plano-cta.secundaria { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); }
 
   .section-movel { background: var(--surface); }
   .combo-tag {
@@ -111,11 +135,33 @@
     border-radius: 999px; padding: 3px 10px; margin-top: 10px;
   }
 
+  .grid-vantagens { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+  .card-vantagem { text-align: left; }
+  .vantagem-icone {
+    width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); margin-bottom: 14px;
+  }
+  .card-vantagem h3 { font-size: 15.5px; font-weight: 700; margin-bottom: 6px; }
+  .card-vantagem p { font-size: 13.5px; color: var(--text-mute); line-height: 1.55; margin: 0; }
+
   footer {
-    text-align: center; padding: 30px 24px; color: var(--text-mute); font-size: 12px;
+    text-align: center; padding: 34px 24px 90px; color: var(--text-mute); font-size: 12px;
     border-top: 1px solid var(--border);
   }
   footer a { color: var(--accent); text-decoration: none; }
+  footer .footer-linha { margin-top: 6px; }
+
+  .sticky-cta { display: none; }
+  @media (max-width: 640px) {
+    footer { padding-bottom: 96px; }
+    .sticky-cta {
+      display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+      padding: 12px 16px; background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(10px); border-top: 1px solid var(--border);
+    }
+    .sticky-cta .btn { width: 100%; justify-content: center; }
+    .nav-tel span { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -135,7 +181,13 @@
       <img id="marca-logo" src="" alt="" />
       <span id="marca-nome"></span>
     </div>
-    <a id="whatsapp-topo" class="btn btn-primary" style="padding:9px 18px;font-size:13px;" href="#" target="_blank" rel="noopener">Falar agora</a>
+    <div class="nav-actions">
+      <a id="nav-telefone" class="nav-tel" href="#" style="display:none;">
+        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.7 3.6.7.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C11 21 3 13 3 4.6c0-.6.4-1 1-1h3.3c.6 0 1 .4 1 1 0 1.3.2 2.5.7 3.6.1.3 0 .7-.2 1l-2.2 2.2Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        <span id="nav-telefone-texto"></span>
+      </a>
+      <a id="whatsapp-topo" class="btn btn-primary" style="padding:9px 18px;font-size:13px;" href="#" target="_blank" rel="noopener">Falar agora</a>
+    </div>
   </header>
 
   <section class="hero">
@@ -146,6 +198,10 @@
     <div class="cta-row">
       <a id="whatsapp-hero" class="btn btn-primary" href="#" target="_blank" rel="noopener">Quero contratar</a>
       <a href="#planos" class="btn btn-outline">Ver planos</a>
+    </div>
+    <div id="trust-strip" class="trust-strip" style="display:none;">
+      <span class="trust-stars">★★★★★</span>
+      <span id="trust-texto"></span>
     </div>
   </section>
 
@@ -161,10 +217,43 @@
     <div class="grid-planos" id="grid-planos-movel"></div>
   </section>
 
+  <section id="vantagens">
+    <h2 class="section-title">Por que assinar</h2>
+    <p class="section-sub">O que você ganha assim que a internet é instalada.</p>
+    <div class="grid-vantagens">
+      <div class="card-vantagem">
+        <div class="vantagem-icone"><svg viewBox="0 0 24 24" width="22" height="22"><rect x="4" y="3" width="16" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+        <h3>Fatura e PIX no app</h3>
+        <p>Pague sua mensalidade em poucos toques, sem esperar boleto chegar.</p>
+      </div>
+      <div class="card-vantagem">
+        <div class="vantagem-icone"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 5h16v11H8l-4 4V5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+        <h3>Suporte direto no app</h3>
+        <p>Abre e acompanha o chamado sem precisar ligar nem esperar na linha.</p>
+      </div>
+      <div class="card-vantagem">
+        <div class="vantagem-icone"><svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 8v4l3 2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></div>
+        <h3>Teste de velocidade</h3>
+        <p>Confirme sua conexão na hora, direto pelo celular, sem site externo.</p>
+      </div>
+      <div class="card-vantagem">
+        <div class="vantagem-icone"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+        <h3>Tudo na palma da mão</h3>
+        <p>Contrato, consumo e histórico de pagamento, sempre à mão no app.</p>
+      </div>
+    </div>
+  </section>
+
   <footer>
     <p id="footer-cta"></p>
-    <p style="margin-top:10px;">Página criada com <a href="https://synkisp.com.br" target="_blank" rel="noopener">Synk ISP</a></p>
+    <p class="footer-linha" id="footer-endereco" style="display:none;"></p>
+    <p class="footer-linha" id="footer-cnpj" style="display:none;"></p>
+    <p class="footer-linha">Página criada com <a href="https://synkisp.com.br" target="_blank" rel="noopener">Synk ISP</a></p>
   </footer>
+
+  <div class="sticky-cta">
+    <a id="whatsapp-sticky" class="btn btn-primary" href="#" target="_blank" rel="noopener">Quero contratar</a>
+  </div>
 </div>
 
 <script>
@@ -189,9 +278,10 @@
     return "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
   }
 
-  function montarCardInternet(p) {
+  function montarCardInternet(p, whatsapp, nomeProvedor) {
     var tags = (p.beneficios || "").split(",").map(function (t) { return t.trim(); }).filter(Boolean);
     var destaque = p.destaque === true || p.destaque === "true";
+    var wa = linkWhatsapp(whatsapp, "Olá! Vi a página da " + (nomeProvedor || "internet") + " e quero assinar o plano " + p.nome + ".");
     return (
       '<div class="card-plano' + (destaque ? " destaque" : "") + '">' +
         (destaque ? '<span class="badge-destaque">Mais popular</span>' : "") +
@@ -199,14 +289,16 @@
         '<div class="plano-nome">' + p.nome + '</div>' +
         '<div class="plano-preco">' + brl(p.valor) + '<span>/mês</span></div>' +
         (tags.length ? '<div class="plano-tags">' + tags.map(function (t) { return '<span class="tag">' + t.toUpperCase() + '</span>'; }).join("") + '</div>' : "") +
+        (wa ? '<a class="plano-cta ' + (destaque ? "primaria" : "secundaria") + '" href="' + wa + '" target="_blank" rel="noopener">Assinar agora</a>' : "") +
       '</div>'
     );
   }
 
-  function montarCardMovel(p) {
+  function montarCardMovel(p, whatsapp, nomeProvedor) {
     var totalGb = Number(p.gb_plano) + Number(p.gb_bonus || 0);
     var isCombo = p.tipo === "combo" && p.mega_fibra;
     var tags = (p.beneficios || "").split(",").map(function (t) { return t.trim(); }).filter(Boolean);
+    var wa = linkWhatsapp(whatsapp, "Olá! Vi a página da " + (nomeProvedor || "internet") + " e quero o plano " + p.nome + ".");
     return (
       '<div class="card-plano">' +
         '<div class="plano-velocidade">' + totalGb + '<small> GB</small></div>' +
@@ -214,6 +306,7 @@
         (isCombo ? '<div class="combo-tag">+ Internet fibra ' + p.mega_fibra + ' MEGA</div>' : "") +
         '<div class="plano-preco">' + brl(p.valor) + '<span>/mês</span></div>' +
         (tags.length ? '<div class="plano-tags">' + tags.map(function (t) { return '<span class="tag">' + t.toUpperCase() + '</span>'; }).join("") + '</div>' : "") +
+        (wa ? '<a class="plano-cta secundaria" href="' + wa + '" target="_blank" rel="noopener">Assinar agora</a>' : "") +
       '</div>'
     );
   }
@@ -234,39 +327,70 @@
       var lp = json.data;
       var tema = lp.tema || {};
       var whatsapp = lp.atendimento && lp.atendimento.whatsapp;
+      var telefone = lp.atendimento && lp.atendimento.telefone;
+      var nomeProvedor = tema.nome || "";
 
       document.documentElement.style.setProperty("--accent", tema.accent || "#2563EB");
       document.documentElement.style.setProperty("--accent2", tema.accent2 || "#7C3AED");
-      document.title = tema.nome ? tema.nome + " — Internet fibra e móvel" : "Internet fibra e móvel";
+      document.title = nomeProvedor ? nomeProvedor + " — Internet fibra e móvel" : "Internet fibra e móvel";
 
       // Favicon do provedor, se ele tiver um cadastrado — senão mantém o padrão da Synk.
       var faviconProvedor = tema.favicon || tema.icon192 || tema.icon512 || tema.logo_url;
       if (faviconProvedor) document.getElementById("favicon-link").href = faviconProvedor;
 
-      document.getElementById("marca-nome").textContent = tema.nome || "";
+      document.getElementById("marca-nome").textContent = nomeProvedor;
       if (tema.logo_url) document.getElementById("marca-logo").src = tema.logo_url;
 
       document.getElementById("hero-cidade").textContent = lp.cidade || "";
       document.getElementById("hero-headline").textContent = lp.headline;
       document.getElementById("hero-subheadline").textContent = lp.subheadline;
-      document.getElementById("footer-cta").textContent = (tema.nome || "Seu provedor") + " · fale com a gente antes de contratar.";
+      document.getElementById("footer-cta").textContent = (nomeProvedor || "Seu provedor") + " · fale com a gente antes de contratar.";
 
-      var textoWhats = "Olá! Vi a página da " + (tema.nome || "internet") + " e quero contratar um plano.";
+      if (lp.endereco) {
+        var elEndereco = document.getElementById("footer-endereco");
+        elEndereco.textContent = lp.endereco;
+        elEndereco.style.display = "block";
+      }
+      if (lp.cnpj) {
+        var elCnpj = document.getElementById("footer-cnpj");
+        elCnpj.textContent = "CNPJ " + lp.cnpj;
+        elCnpj.style.display = "block";
+      }
+
+      if (telefone) {
+        var elTel = document.getElementById("nav-telefone");
+        document.getElementById("nav-telefone-texto").textContent = telefone;
+        elTel.href = "tel:" + String(telefone).replace(/\D/g, "");
+        elTel.style.display = "flex";
+      }
+
+      if (lp.notaGoogle) {
+        var textoTrust = Number(lp.notaGoogle).toFixed(1).replace(".", ",") + " no Google" + (lp.qtdAvaliacoesGoogle ? " · " + lp.qtdAvaliacoesGoogle + " avaliações" : "");
+        var trustEl = document.getElementById("trust-strip");
+        if (lp.linkGoogle) {
+          document.getElementById("trust-texto").innerHTML = '<a href="' + lp.linkGoogle + '" target="_blank" rel="noopener">' + textoTrust + '</a>';
+        } else {
+          document.getElementById("trust-texto").textContent = textoTrust;
+        }
+        trustEl.style.display = "inline-flex";
+      }
+
+      var textoWhats = "Olá! Vi a página da " + (nomeProvedor || "internet") + " e quero contratar um plano.";
       var wa = linkWhatsapp(whatsapp, textoWhats);
-      ["whatsapp-topo", "whatsapp-hero"].forEach(function (id) {
+      ["whatsapp-topo", "whatsapp-hero", "whatsapp-sticky"].forEach(function (id) {
         var el = document.getElementById(id);
         if (wa) { el.href = wa; } else { el.style.display = "none"; }
       });
 
       var planosInternet = lp.planosInternet || [];
       document.getElementById("grid-planos-internet").innerHTML = planosInternet.length
-        ? planosInternet.map(montarCardInternet).join("")
+        ? planosInternet.map(function (p) { return montarCardInternet(p, whatsapp, nomeProvedor); }).join("")
         : '<p style="text-align:center;color:var(--text-mute);grid-column:1/-1;">Planos em breve — fale com a gente.</p>';
 
       var planosMovel = lp.planosMoveis || [];
       if (planosMovel.length) {
         document.getElementById("secao-movel").style.display = "block";
-        document.getElementById("grid-planos-movel").innerHTML = planosMovel.map(montarCardMovel).join("");
+        document.getElementById("grid-planos-movel").innerHTML = planosMovel.map(function (p) { return montarCardMovel(p, whatsapp, nomeProvedor); }).join("");
       }
 
       document.getElementById("estado-carregando").style.display = "none";
