@@ -52,6 +52,46 @@
   var WHATSAPP_NUMERO = "5585992989066";
   var leadForm = $("#leadForm");
   if (leadForm) {
+    // Faixa de assinantes -> plano recomendado, com só 2-3 destaques (não a
+    // lista inteira de módulos) — o objetivo é vender um discurso claro por
+    // porte de provedor, não "faz tudo". Mesma régua usada na reorganização
+    // dos planos_synk (Básico/Profissional/Avançado/Enterprise).
+    var PLANO_POR_FAIXA = {
+      "Até 500": {
+        nome: "Básico", preco: "R$ 49,90/mês",
+        destaques: ["App white label com fatura, PIX e suporte", "Central de Benefícios (nova receita)"],
+      },
+      "500 a 2.000": {
+        nome: "Profissional", preco: "R$ 99,90/mês",
+        destaques: ["Pontos e recompensas", "Desbloqueio de confiança", "Sugestão de IA antes de abrir chamado"],
+      },
+      "2.000 a 5.000": {
+        nome: "Avançado", preco: "R$ 119,90/mês",
+        destaques: ["Internet Móvel (nova receita)", "Vitrine de Planos (capta cliente novo)"],
+      },
+      "Mais de 5.000": {
+        nome: "Enterprise", preco: "R$ 199,90/mês",
+        destaques: ["App Synk TV", "IPTV ao vivo no app do assinante"],
+      },
+    };
+
+    var leadAssinantesEl = $("#leadAssinantes");
+    var planoRecomendadoEl = $("#planoRecomendado");
+    function atualizarPlanoRecomendado() {
+      if (!leadAssinantesEl || !planoRecomendadoEl) return;
+      var plano = PLANO_POR_FAIXA[leadAssinantesEl.value];
+      if (!plano) { planoRecomendadoEl.classList.remove("show"); return; }
+      planoRecomendadoEl.innerHTML =
+        '<div class="pr-eyebrow">Baseado no tamanho da sua base</div>' +
+        '<div class="pr-titulo">Plano ' + plano.nome + " — " + plano.preco + "</div>" +
+        '<div class="pr-destaques">' + plano.destaques.join(" · ") + "</div>";
+      planoRecomendadoEl.classList.add("show");
+    }
+    if (leadAssinantesEl) {
+      leadAssinantesEl.addEventListener("change", atualizarPlanoRecomendado);
+      atualizarPlanoRecomendado();
+    }
+
     leadForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -61,6 +101,7 @@
       var email = $("#leadEmail").value.trim();
       var assinantes = $("#leadAssinantes").value;
       var gerenciador = $("#leadGerenciador").value;
+      var planoRecomendado = PLANO_POR_FAIXA[assinantes];
 
       var camposObrigatorios = [
         { el: $("#leadNome"), valor: nome },
@@ -88,6 +129,9 @@
       if (email) linhas.push("E-mail: " + email);
       linhas.push("Assinantes: " + assinantes);
       linhas.push("Gerenciador: " + gerenciador);
+      if (planoRecomendado) {
+        linhas.push("", "Plano recomendado: " + planoRecomendado.nome + " (" + planoRecomendado.preco + ")");
+      }
 
       var mensagem = encodeURIComponent(linhas.join("\n"));
       var success = $("#leadSuccess");
@@ -117,10 +161,14 @@
   };
   var iconeCheck = '<svg viewBox="0 0 20 20" width="16" height="16"><path d="M4 10.5l3.5 3.5L16 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> ';
 
-  function montarCardPlano(plano, destaque) {
+  // Mostra só o que É NOVO nesse plano em relação ao anterior (no máx. 3
+  // itens) — em vez de despejar os 8 módulos, cada card conta uma história
+  // curta: "pra quem já tem o básico, o que esse plano soma".
+  function montarCardPlano(plano, destaque, ehPrimeiro, novosModulos) {
     var preco = Number(plano.valor_mensalidade).toFixed(2).replace(".", ",");
     var itens = ['<li>' + iconeCheck + 'App white label com faturas e suporte</li>'];
-    (plano.modulos || []).forEach(function (m) {
+    if (!ehPrimeiro) itens.push('<li>' + iconeCheck + 'Tudo do plano anterior</li>');
+    novosModulos.slice(0, 3).forEach(function (m) {
       if (MODULO_LABEL[m]) itens.push('<li>' + iconeCheck + MODULO_LABEL[m] + '</li>');
     });
     var mensagem = encodeURIComponent("Olá, quero começar no plano " + plano.nome + " do Synk");
@@ -145,7 +193,11 @@
         // "Mais escolhido" = plano do meio da lista (o intermediário costuma
         // ser o de melhor custo-benefício na régua), sem depender de flag no banco.
         var indiceDestaque = Math.min(1, planos.length - 1);
-        pricingGrid.innerHTML = planos.map(function (p, i) { return montarCardPlano(p, i === indiceDestaque); }).join("");
+        pricingGrid.innerHTML = planos.map(function (p, i) {
+          var modulosAnteriores = i > 0 ? (planos[i - 1].modulos || []) : [];
+          var novosModulos = (p.modulos || []).filter(function (m) { return modulosAnteriores.indexOf(m) === -1; });
+          return montarCardPlano(p, i === indiceDestaque, i === 0, novosModulos);
+        }).join("");
       })
       .catch(function () {
         pricingGrid.innerHTML = '<p style="text-align:center;color:var(--text-mute);grid-column:1/-1;">Não foi possível carregar os planos agora — fale com a gente pelo WhatsApp.</p>';

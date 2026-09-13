@@ -332,6 +332,15 @@ a { color: inherit; text-decoration: none; }
 .lead-success { display: none; align-items: center; gap: 10px; background: rgba(18,183,106,.12); border: 1px solid rgba(18,183,106,.4); color: var(--ok); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; font-weight: 600; margin-top: 14px; }
 .lead-success.show { display: flex; }
 
+.plano-recomendado {
+  display: none; margin-top: 4px; padding: 14px 16px; border-radius: 12px;
+  background: rgba(37,99,235,.08); border: 1px solid rgba(37,99,235,.25);
+}
+.plano-recomendado.show { display: block; }
+.plano-recomendado .pr-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--accent); }
+.plano-recomendado .pr-titulo { font-size: 15px; font-weight: 800; color: var(--text); margin-top: 3px; }
+.plano-recomendado .pr-destaques { font-size: 12.5px; color: var(--text-mute); margin-top: 5px; line-height: 1.5; }
+
 /* ============================== CTA FINAL ============================== */
 .cta-final { text-align: center; }
 .cta-final-inner { max-width: 620px; margin: 0 auto; }
