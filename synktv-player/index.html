@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0, user-scalable=no" />
+    <title>Synk TV</title>
+    <style>
+      html, body, #root { width: 100%; height: 100%; margin: 0; background: #05070B; overflow: hidden; }
+      * { box-sizing: border-box; }
+
+      /* Splash nativa = skeleton da primeira tela, em HTML/CSS puro: pinta no
+         primeiro frame, antes do bundle JS ser lido e executado (numa TV isso
+         leva alguns segundos). Mesmo canvas lógico 1280x720 ampliado 1.5x do
+         main.tsx e mesmas medidas da Sidebar/fileiras/onboarding — quando o
+         React assume, a tela real cai exatamente por cima, sem salto.
+         Só CSS com suporte garantido nas WebKit antigas de Tizen/webOS. */
+      #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: #05070B;
+        -webkit-transition: opacity .3s ease; transition: opacity .3s ease; overflow: hidden; }
+      #splash.saindo { opacity: 0; }
+      #splash .canvas { position: absolute; top: 0; left: 0; width: 1280px; height: 720px;
+        -webkit-transform: scale(1.5); transform: scale(1.5); -webkit-transform-origin: 0 0; transform-origin: 0 0; }
+      #splash .o { position: absolute; background: #151B26; border-radius: 8px; }
+      #splash .pulso { position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        -webkit-animation: skPulso 1.4s ease-in-out infinite; animation: skPulso 1.4s ease-in-out infinite; }
+      @-webkit-keyframes skPulso { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+      @keyframes skPulso { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+      #splash .modo { display: none; }
+      #splash.home .modo-home, #splash.onboarding .modo-onboarding { display: block; }
+      #splash .lateral { position: absolute; top: 0; left: 0; bottom: 0; width: 76px; background: #090D15; border-right: 1px solid #161D2A; }
+      #splash .marca { position: absolute; top: 0; left: 0; bottom: 0; width: 440px; border-right: 1px solid #141A26;
+        background: #090D15; background-image: radial-gradient(ellipse at 0% 0%, rgba(37,99,235,.25) 0%, rgba(5,7,11,0) 65%); }
+      #splash img.logo { position: absolute; object-fit: contain; }
+    </style>
+    <script defer src="/synktv-player/assets/index-CNSDQdJT.js"></script>
+  </head>
+  <body>
+    <div id="splash">
+      <div class="canvas">
+        <div class="modo modo-home">
+          <div class="lateral"></div>
+          <img class="logo splash-logo" src="./synk-logo.png" alt="" style="left:18px;top:22px;width:40px;height:40px;border-radius:10px" />
+          <div class="pulso"><div class="o" style="left:27px;top:105px;width:22px;height:22px;border-radius:6px"></div><div class="o" style="left:27px;top:159px;width:22px;height:22px;border-radius:6px"></div><div class="o" style="left:27px;top:213px;width:22px;height:22px;border-radius:6px"></div><div class="o" style="left:27px;top:267px;width:22px;height:22px;border-radius:6px"></div><div class="o" style="left:27px;top:321px;width:22px;height:22px;border-radius:6px"></div><div class="o" style="left:27px;top:585px;width:22px;height:22px;border-radius:6px"></div><div class="o" style="left:27px;top:627px;width:22px;height:22px;border-radius:6px"></div><div class="o" style="left:27px;top:669px;width:22px;height:22px;border-radius:6px"></div><div class="o" style="left:104px;top:28px;width:120px;height:22px;border-radius:6px"></div><div class="o" style="left:104px;top:68px;width:170px;height:16px;border-radius:6px"></div><div class="o" style="left:108px;top:96px;width:130px;height:195px;"></div><div class="o" style="left:250px;top:96px;width:130px;height:195px;"></div><div class="o" style="left:392px;top:96px;width:130px;height:195px;"></div><div class="o" style="left:534px;top:96px;width:130px;height:195px;"></div><div class="o" style="left:676px;top:96px;width:130px;height:195px;"></div><div class="o" style="left:818px;top:96px;width:130px;height:195px;"></div><div class="o" style="left:960px;top:96px;width:130px;height:195px;"></div><div class="o" style="left:1102px;top:96px;width:130px;height:195px;"></div><div class="o" style="left:104px;top:339px;width:170px;height:16px;border-radius:6px"></div><div class="o" style="left:108px;top:367px;width:130px;height:195px;"></div><div class="o" style="left:250px;top:367px;width:130px;height:195px;"></div><div class="o" style="left:392px;top:367px;width:130px;height:195px;"></div><div class="o" style="left:534px;top:367px;width:130px;height:195px;"></div><div class="o" style="left:676px;top:367px;width:130px;height:195px;"></div><div class="o" style="left:818px;top:367px;width:130px;height:195px;"></div><div class="o" style="left:960px;top:367px;width:130px;height:195px;"></div><div class="o" style="left:1102px;top:367px;width:130px;height:195px;"></div><div class="o" style="left:104px;top:610px;width:170px;height:16px;border-radius:6px"></div><div class="o" style="left:108px;top:638px;width:130px;height:195px;"></div><div class="o" style="left:250px;top:638px;width:130px;height:195px;"></div><div class="o" style="left:392px;top:638px;width:130px;height:195px;"></div><div class="o" style="left:534px;top:638px;width:130px;height:195px;"></div><div class="o" style="left:676px;top:638px;width:130px;height:195px;"></div><div class="o" style="left:818px;top:638px;width:130px;height:195px;"></div><div class="o" style="left:960px;top:638px;width:130px;height:195px;"></div><div class="o" style="left:1102px;top:638px;width:130px;height:195px;"></div></div>
+        </div>
+        <div class="modo modo-onboarding">
+          <div class="marca"></div>
+          <img class="logo splash-logo" src="./synk-logo.png" alt="" style="left:48px;top:52px;width:64px;height:64px;border-radius:16px" />
+          <div class="pulso"><div class="o" style="left:48px;top:138px;width:200px;height:30px;border-radius:8px"></div><div class="o" style="left:48px;top:178px;width:280px;height:14px;border-radius:6px"></div><div class="o" style="left:48px;top:528px;width:32px;height:32px;border-radius:16px"></div><div class="o" style="left:94px;top:530px;width:110px;height:14px;border-radius:6px"></div><div class="o" style="left:48px;top:582px;width:32px;height:32px;border-radius:16px"></div><div class="o" style="left:94px;top:584px;width:110px;height:14px;border-radius:6px"></div><div class="o" style="left:48px;top:636px;width:32px;height:32px;border-radius:16px"></div><div class="o" style="left:94px;top:638px;width:110px;height:14px;border-radius:6px"></div><div class="o" style="left:650px;top:180px;width:110px;height:12px;border-radius:5px"></div><div class="o" style="left:650px;top:202px;width:300px;height:28px;border-radius:8px"></div><div class="o" style="left:650px;top:240px;width:380px;height:14px;border-radius:6px"></div><div class="o" style="left:650px;top:288px;width:140px;height:12px;border-radius:5px"></div><div class="o" style="left:650px;top:306px;width:420px;height:48px;border-radius:12px"></div><div class="o" style="left:650px;top:370px;width:140px;height:12px;border-radius:5px"></div><div class="o" style="left:650px;top:388px;width:420px;height:48px;border-radius:12px"></div><div class="o" style="left:650px;top:466px;width:420px;height:52px;border-radius:12px"></div></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // Escolhe qual skeleton mostrar (Home se já tem sessão, senão
+      // onboarding) e aplica a logo do provedor salvo — mesmas chaves do
+      // src/storage.ts. Também expõe o "esconder" chamado pelo React quando a
+      // primeira tela estiver pintada (src/App.tsx). ES5 de propósito.
+      (function () {
+        var splash = document.getElementById("splash");
+        // Mesma escala do src/main.tsx (largura total; na TV = 1.5).
+        var canvas = splash.getElementsByTagName("div")[0];
+        function escalar() {
+          var w = window.innerWidth || 1920, h = window.innerHeight || 1080;
+          var k = w / 1280;
+          canvas.style.webkitTransform = canvas.style.transform = "scale(" + k + ")";
+          canvas.style.height = Math.max(h / k, 560) + "px";
+        }
+        escalar();
+        window.addEventListener("resize", escalar);
+        var logado = false, p = null;
+        try {
+          logado = !!localStorage.getItem("synktv:credenciais");
+          var raw = localStorage.getItem("synktv:provedor");
+          p = raw ? JSON.parse(raw) : null;
+        } catch (e) {}
+        splash.className = logado ? "home" : "onboarding";
+        if (p && p.logo_url) {
+          var imgs = splash.getElementsByTagName("img");
+          for (var i = 0; i < imgs.length; i++) {
+            (function (img) {
+              img.onerror = function () { img.onerror = null; img.src = "./synk-logo.png"; };
+              img.src = p.logo_url;
+            })(imgs[i]);
+          }
+        }
+
+        window.__esconderSplash = function () {
+          if (!splash || splash.className.indexOf("saindo") !== -1) return;
+          splash.className += " saindo";
+          setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 350);
+        };
+      })();
+    </script>
+    <div id="root"></div>
+  </body>
+</html>
